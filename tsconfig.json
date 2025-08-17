@@ -12,8 +12,11 @@
     "module": "nodenext",
     "target": "es2022",
     "strict": true,
+    "allowArbitraryExtensions": true,
+    "allowImportingTsExtensions": true,
+    "noEmit": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "moduleResolution": "node16"
+    "moduleResolution": "node16",
   }
 }
