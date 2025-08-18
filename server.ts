@@ -7,7 +7,6 @@ import {
 } from "fastify-type-provider-zod";
 import fastifySwagger from "@fastify/swagger";
 import fastifySwaggerUi from "@fastify/swagger-ui";
-import scalarAPIReference from "@scalar/fastify-api-reference";
 
 import { getCoursesRoute } from "./src/routes/get-course.ts";
 import { getCourseByIdRoute } from "./src/routes/get-course-by-id.ts";
