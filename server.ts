@@ -105,7 +105,7 @@ server.delete("/courses/:id", async (request, reply) => {
     .returning();
 
   if (result.length > 0) {
-    return reply.send({ deleted: true });
+    return reply.send({ deleted: "Curso deletado com sucesso." });
   }
   return reply.status(404).send({ error: "Curso não encontrado." });
 });

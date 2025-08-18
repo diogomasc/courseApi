@@ -11,6 +11,10 @@ GET http://localhost:3333/courses
 
 ###
 
+GET http://localhost:3333/courses/[ID]
+
+###
+
 
 PATCH http://localhost:3333/courses/[ID]
 Content-Type: application/json

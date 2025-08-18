@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "node --watch server.ts",
+    "dev": "node --env-file .env --watch server.ts",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:studio": "drizzle-kit studio"
@@ -13,7 +13,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "dotenv": "^17.2.1",
     "drizzle-orm": "^0.44.4",
     "fastify": "^5.5.0",
     "pg": "^8.16.3",
