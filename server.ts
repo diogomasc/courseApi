@@ -1,7 +1,19 @@
-import { eq } from "drizzle-orm";
 import fastify from "fastify";
-import { db } from "./src/database/client.ts";
-import { courses } from "./src/database/schema.ts";
+import {
+  validatorCompiler,
+  serializerCompiler,
+  type ZodTypeProvider,
+  jsonSchemaTransform,
+} from "fastify-type-provider-zod";
+import fastifySwagger from "@fastify/swagger";
+import fastifySwaggerUi from "@fastify/swagger-ui";
+import scalarAPIReference from "@scalar/fastify-api-reference";
+
+import { getCoursesRoute } from "./src/routes/get-course.ts";
+import { getCourseByIdRoute } from "./src/routes/get-course-by-id.ts";
+import { createCourseRoute } from "./src/routes/create-course.ts";
+import { deleteCoursesRoute } from "./src/routes/delete-course.ts";
+import { updateCoursesRoute } from "./src/routes/update-course.ts";
 
 const server = fastify({
   logger: {
@@ -13,103 +25,45 @@ const server = fastify({
       },
     },
   },
+}).withTypeProvider<ZodTypeProvider>();
+
+// Swagger setup
+server.register(fastifySwagger, {
+  openapi: {
+    info: {
+      title: "Course API",
+      description: "API para gerenciar cursos",
+      version: "1.0.0",
+    },
+  },
+  transform: jsonSchemaTransform,
 });
 
-// TODO: Criar rotas e documentação swagger
-
-// GET /courses
-server.get("/courses", async (request, reply) => {
-  const result = await db.select().from(courses);
-  return reply.send({ courses: result });
+server.register(fastifySwaggerUi, {
+  routePrefix: "/docs",
 });
 
-// GET /courses/:id
-server.get("/courses/:id", async (request, reply) => {
-  type Params = {
-    id: string;
-  };
+// Checa os dados de entrada
+server.setValidatorCompiler(validatorCompiler);
+// Converte os dados de saída
+server.setSerializerCompiler(serializerCompiler);
 
-  const params = request.params as Params;
-  const courseId = params.id;
+// Register routes
+server.register(createCourseRoute);
+server.register(getCoursesRoute);
+server.register(getCourseByIdRoute);
+server.register(updateCoursesRoute);
+server.register(deleteCoursesRoute);
 
-  const result = await db
-    .select()
-    .from(courses)
-    .where(eq(courses.id, courseId));
-
-  if (result.length > 0) {
-    return { course: result[0] };
+const start = async () => {
+  try {
+    await server.listen({ port: 3333 });
+    console.log("Server is running on http://localhost:3333");
+    console.log("Docs available at http://localhost:3333/docs");
+  } catch (err) {
+    server.log.error(err);
+    process.exit(1);
   }
+};
 
-  return reply.status(404).send({ error: "Curso não encontrado." });
-});
-
-// POST /courses
-server.post("/courses", async (request, reply) => {
-  type Body = {
-    title: string;
-    description?: string;
-  };
-
-  const body = request.body as Body;
-  const courseTitle = body.title;
-
-  if (!courseTitle) {
-    return reply.status(400).send({ error: "Título do curso é obrigatório." });
-  }
-
-  const result = await db
-    .insert(courses)
-    .values({ title: courseTitle, description: body.description })
-    .returning();
-
-  reply.status(201).send({ courseId: result[0].id });
-});
-
-// PATCH /courses/:id
-server.patch("/courses/:id", async (request, reply) => {
-  type Params = { id: string };
-  type Body = { title?: string; description?: string };
-  const params = request.params as Params;
-  const body = request.body as Body;
-
-  if (!body.title && !body.description) {
-    return reply
-      .status(400)
-      .send({ error: "Informe ao menos um campo para atualizar." });
-  }
-
-  const result = await db
-    .update(courses)
-    .set({
-      ...(body.title ? { title: body.title } : {}),
-      ...(body.description ? { description: body.description } : {}),
-    })
-    .where(eq(courses.id, params.id))
-    .returning();
-
-  if (result.length > 0) {
-    return reply.send({ course: result[0] });
-  }
-  return reply.status(404).send({ error: "Curso não encontrado." });
-});
-
-// DELETE /courses/:id
-server.delete("/courses/:id", async (request, reply) => {
-  type Params = { id: string };
-  const params = request.params as Params;
-
-  const result = await db
-    .delete(courses)
-    .where(eq(courses.id, params.id))
-    .returning();
-
-  if (result.length > 0) {
-    return reply.send({ deleted: "Curso deletado com sucesso." });
-  }
-  return reply.status(404).send({ error: "Curso não encontrado." });
-});
-
-server.listen({ port: 3333 }).then(() => {
-  console.log("Server is running on http://localhost:3333");
-});
+start();
