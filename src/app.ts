@@ -7,12 +7,11 @@ import {
 } from "fastify-type-provider-zod";
 import fastifySwagger from "@fastify/swagger";
 import fastifySwaggerUi from "@fastify/swagger-ui";
-
-import { getCoursesRoute } from "./src/routes/get-course.ts";
-import { getCourseByIdRoute } from "./src/routes/get-course-by-id.ts";
-import { createCourseRoute } from "./src/routes/create-course.ts";
-import { deleteCoursesRoute } from "./src/routes/delete-course.ts";
-import { updateCoursesRoute } from "./src/routes/update-course.ts";
+import { getCoursesRoute } from "./routes/get-course.ts";
+import { getCourseByIdRoute } from "./routes/get-course-by-id.ts";
+import { createCourseRoute } from "./routes/create-course.ts";
+import { deleteCoursesRoute } from "./routes/delete-course.ts";
+import { updateCoursesRoute } from "./routes/update-course.ts";
 
 const server = fastify({
   logger: {
@@ -54,15 +53,4 @@ server.register(getCourseByIdRoute);
 server.register(updateCoursesRoute);
 server.register(deleteCoursesRoute);
 
-const start = async () => {
-  try {
-    await server.listen({ port: 3333 });
-    console.log("Server is running on http://localhost:3333");
-    console.log("Docs available at http://localhost:3333/docs");
-  } catch (err) {
-    server.log.error(err);
-    process.exit(1);
-  }
-};
-
-start();
+export { server };
