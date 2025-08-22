@@ -2,12 +2,21 @@ POST http://localhost:3333/courses
 Content-Type: application/json
 
 {
-  "title": "Curso de Node.js"
+  "title": "Curso de JavaScript",
+  "description": "Descrição do curso de JavaScript"
 }
 
 ###
 
 GET http://localhost:3333/courses
+
+###
+
+GET http://localhost:3333/courses?search=react
+
+###
+
+GET http://localhost:3333/courses?orderBy=id
 
 ###
 
