@@ -12,17 +12,21 @@ import { getCourseByIdRoute } from "./routes/get-course-by-id.ts";
 import { createCourseRoute } from "./routes/create-course.ts";
 import { deleteCoursesRoute } from "./routes/delete-course.ts";
 import { updateCoursesRoute } from "./routes/update-course.ts";
+import { loginRoute } from "./routes/login.ts";
 
 const server = fastify({
-  logger: process.env.NODE_ENV === 'development' ? {
-    transport: {
-      target: "pino-pretty",
-      options: {
-        translateTime: "HH:MM:ss Z",
-        ignore: "pid,hostname",
-      },
-    },
-  } : false,
+  logger:
+    process.env.NODE_ENV === "development"
+      ? {
+          transport: {
+            target: "pino-pretty",
+            options: {
+              translateTime: "HH:MM:ss Z",
+              ignore: "pid,hostname",
+            },
+          },
+        }
+      : false,
 }).withTypeProvider<ZodTypeProvider>();
 
 // Swagger setup
@@ -52,5 +56,6 @@ server.register(getCoursesRoute);
 server.register(getCourseByIdRoute);
 server.register(updateCoursesRoute);
 server.register(deleteCoursesRoute);
+server.register(loginRoute);
 
 export { server };

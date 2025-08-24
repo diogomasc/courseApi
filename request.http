@@ -36,3 +36,12 @@ Content-Type: application/json
 ###
 
 DELETE http://localhost:3333/courses/[ID]
+
+###
+POST http://localhost:3333/sessions
+Content-Type: application/json
+
+{
+  "email": "joao.silva@gmail.com.teste",
+  "password": "12345aA@"
+}
