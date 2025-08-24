@@ -3,15 +3,14 @@ import { db } from "../database/client.ts";
 import { courses } from "../database/schema.ts";
 import z from "zod";
 import { eq } from "drizzle-orm";
-import { checkRequestJwt } from "./hooks/check-request-jwt.ts";
+import { checkRequestJWT } from "./hooks/check-request-jwt.ts";
 import { getAuthenticatedUserFromRequest } from "../utils/get-authenticated-user-from-request.ts";
-import { checkUserRole } from "./hooks/check-user-role.ts";
 
 export const getCourseByIdRoute: FastifyPluginAsyncZod = async (server) => {
   server.get(
     "/courses/:id",
     {
-      preHandler: [checkRequestJwt, checkUserRole("manager")],
+      preHandler: [checkRequestJWT],
       schema: {
         tags: ["courses"],
         summary: "Get course by ID",
@@ -35,17 +34,16 @@ export const getCourseByIdRoute: FastifyPluginAsyncZod = async (server) => {
 
       const courseId = request.params.id;
 
-      const [course] = await db
+      const result = await db
         .select()
         .from(courses)
-        .where(eq(courses.id, courseId))
-        .limit(1);
+        .where(eq(courses.id, courseId));
 
-      if (!course) {
-        return reply.status(404).send(null);
+      if (result.length > 0) {
+        return { course: result[0] };
       }
 
-      return { course };
+      return reply.status(404).send();
     }
   );
 };

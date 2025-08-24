@@ -6,18 +6,18 @@ import { makeUser } from "../tests/factories/make-user.ts";
 test("login", async () => {
   await server.ready();
 
-  const { user, passwordBeforeWash } = await makeUser();
+  const { user, passwordBeforeHash } = await makeUser();
 
   const response = await request(server.server)
     .post("/sessions")
     .set("Content-Type", "application/json")
     .send({
       email: user.email,
-      password: passwordBeforeWash,
+      password: passwordBeforeHash,
     });
 
-  expect(response.statusCode).toBe(200);
+  expect(response.status).toEqual(200);
   expect(response.body).toEqual({
-    Ok: "Login realizado com sucesso",
+    token: expect.any(String),
   });
 });

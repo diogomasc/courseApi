@@ -7,7 +7,7 @@ import {
 } from "fastify-type-provider-zod";
 import fastifySwagger from "@fastify/swagger";
 import fastifySwaggerUi from "@fastify/swagger-ui";
-import { getCoursesRoute } from "./routes/get-course.ts";
+import { getCoursesRoute } from "./routes/get-courses.ts";
 import { getCourseByIdRoute } from "./routes/get-course-by-id.ts";
 import { createCourseRoute } from "./routes/create-course.ts";
 import { deleteCoursesRoute } from "./routes/delete-course.ts";

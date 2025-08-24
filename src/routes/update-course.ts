@@ -3,7 +3,7 @@ import { courses } from "../database/schema.ts";
 import { db } from "../database/client.ts";
 import { eq } from "drizzle-orm";
 import z from "zod";
-import { checkRequestJwt } from "./hooks/check-request-jwt.ts";
+import { checkRequestJWT } from "./hooks/check-request-jwt.ts";
 import { checkUserRole } from "./hooks/check-user-role.ts";
 
 export const updateCoursesRoute: FastifyPluginAsyncZod = async (server) => {
@@ -13,7 +13,7 @@ export const updateCoursesRoute: FastifyPluginAsyncZod = async (server) => {
       schema: {
         tags: ["courses"],
         summary: "Update course by ID",
-        preHandler: [checkRequestJwt, checkUserRole("manager")],
+        preHandler: [checkRequestJWT, checkUserRole("manager")],
         params: z.object({
           id: z.string().uuid(),
         }),
