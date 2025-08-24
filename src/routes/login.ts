@@ -48,7 +48,7 @@ export const loginRoute: FastifyPluginAsyncZod = async (server) => {
       }
 
       if (!process.env.JWT_SECRET) {
-        throw new Error("JWT_SECRET environment variable is not set");
+        throw new Error("JWT_SECRET must be set");
       }
 
       const token = jwt.sign(

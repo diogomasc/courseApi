@@ -1,9 +1,10 @@
 POST http://localhost:3333/courses
 Content-Type: application/json
+Authorization: [TOKEN]
 
 {
-  "title": "Curso de JavaScript",
-  "description": "Descrição do curso de JavaScript"
+  "title": "Implementando JWT na API",
+  "description": "Descrição do curso de JWT"
 }
 
 ###
@@ -42,6 +43,10 @@ POST http://localhost:3333/sessions
 Content-Type: application/json
 
 {
-  "email": "joao.silva@gmail.com.teste",
+  "email": "exemple@exemple.com",
   "password": "12345aA@"
 }
+
+###
+GET http://localhost:3333/courses/[ID]
+Authorization: [TOKEN]
