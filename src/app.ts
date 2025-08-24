@@ -14,7 +14,7 @@ import { deleteCoursesRoute } from "./routes/delete-course.ts";
 import { updateCoursesRoute } from "./routes/update-course.ts";
 
 const server = fastify({
-  logger: {
+  logger: process.env.NODE_ENV === 'development' ? {
     transport: {
       target: "pino-pretty",
       options: {
@@ -22,7 +22,7 @@ const server = fastify({
         ignore: "pid,hostname",
       },
     },
-  },
+  } : false,
 }).withTypeProvider<ZodTypeProvider>();
 
 // Swagger setup
