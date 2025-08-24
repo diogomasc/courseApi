@@ -10,7 +10,7 @@ test("get courses", async () => {
 
   const titleId = randomUUID();
 
-  const { token } = await makeAuthenticatedUser("manager");
+  const { token } = await makeAuthenticatedUser("student");
   const course = await makeCourse(titleId);
 
   const response = await request(server.server)
